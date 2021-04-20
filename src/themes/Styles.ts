@@ -1,6 +1,6 @@
 import {StyleSheet} from 'react-native';
 
-const styles = StyleSheet.create({
+export const Styles = StyleSheet.create({
   mainView: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -12,5 +12,3 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
-
-export default styles;
