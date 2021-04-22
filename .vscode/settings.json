@@ -1,7 +1,0 @@
-{
-    "javascript.format.insertSpaceAfterOpeningAndBeforeClosingJsxExpressionBraces": true,
-    "javascript.format.insertSpaceAfterOpeningAndBeforeClosingEmptyBraces": false,
-    "typescript.format.insertSpaceAfterOpeningAndBeforeClosingJsxExpressionBraces": true,
-    "typescript.format.insertSpaceAfterSemicolonInForStatements": false,
-    "javascript.format.insertSpaceAfterSemicolonInForStatements": false
-}
