@@ -1,12 +1,31 @@
 import React from 'react';
-import {View, Text} from 'react-native';
-import {Styles} from '../themes';
+import MoviesView from './MoviesView';
+import {NavigationContainer} from '@react-navigation/native';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
+const Tab = createBottomTabNavigator();
 
 export const MainView = () => {
   return (
-    <View style={Styles.mainView}>
-      <Text style={Styles.mainText}>Hello World</Text>
-    </View>
+    <NavigationContainer>
+      <Tab.Navigator
+        initialRouteName="Movies"
+        tabBarOptions={{
+          activeTintColor: 'darkblue',
+          //showLabel: false,
+        }}>
+        <Tab.Screen
+          name="Movies"
+          component={MoviesView}
+          options={{
+            tabBarLabel: 'Movies',
+            tabBarIcon: ({color}) => (
+              <MaterialCommunityIcons name="movie" color={color} size={30} />
+            ),
+          }}
+        />
+      </Tab.Navigator>
+    </NavigationContainer>
   );
 };
