@@ -13,7 +13,6 @@ export const MainView = () => {
         initialRouteName="Movies"
         tabBarOptions={{
           activeTintColor: 'darkblue',
-          //showLabel: false,
         }}>
         <Tab.Screen
           name="Movies"

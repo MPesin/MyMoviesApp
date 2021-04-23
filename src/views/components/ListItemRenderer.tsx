@@ -1,6 +1,6 @@
 import React from 'react';
 import {Card, Icon, Text, Rating} from 'react-native-elements';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, Image} from 'react-native';
 import {MovieItem} from '../../models';
 
 const ICON_FAVORIVE_SELECTED = 'heart';
@@ -14,26 +14,42 @@ export function ListItemRenderer({item}: {item: MovieItem}) {
 
   return (
     <Card>
-      <Text h3>{item.title}</Text>
-      <View style={style.row}>
-        <Rating imageSize={20} readonly startingValue={item.rating} />
-        <Text h4>{item.year}</Text>
+      <View style={style.rowContainer}>
+        <Image source={{uri: item.poster}} style={style.image} />
+        <View style={style.textContainer}>
+          <Text h3>{item.title}</Text>
+          <View style={style.rowContainer}>
+            <Rating imageSize={20} readonly startingValue={item.rating} />
+            <Text h4>{item.year}</Text>
+            <Icon
+              type="material-community"
+              size={40}
+              name={iconName}
+              color="red"
+            />
+          </View>
+        </View>
       </View>
-      <Icon type="material-community" size={40} name={iconName} color="red" />
-      <Card.Image
-        source={{
-          uri: item.poster,
-        }}
-      />
     </Card>
   );
 }
 
 const style = StyleSheet.create({
-  row: {
+  rowContainer: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-around',
-    alignItems: 'center',
+    justifyContent: 'space-between',
+    alignItems: 'stretch',
+  },
+  image: {
+    height: '100%',
+    resizeMode: 'contain',
+    flex: 1,
+    alignSelf: 'flex-start',
+  },
+  textContainer: {
+    height: '100%',
+    resizeMode: 'contain',
+    flex: 3,
+    alignSelf: 'flex-end',
   },
 });
