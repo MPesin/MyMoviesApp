@@ -1,2 +1,2 @@
-export * from './MovieItem';
-export * from './MoviesHandler';
+export * from '../services/movieItem';
+export * from './moviesHandler';

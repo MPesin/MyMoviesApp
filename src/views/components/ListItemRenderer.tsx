@@ -16,14 +16,14 @@ export function ListItemRenderer({item}: {item: MovieItem}) {
     <Card>
       <View style={style.rowContainer}>
         <Image source={{uri: item.poster}} style={style.image} />
-        <View style={style.textContainer}>
+        <View style={style.detailsContainer}>
           <Text h3>{item.title}</Text>
           <View style={style.rowContainer}>
             <Rating imageSize={20} readonly startingValue={item.rating} />
             <Text h4>{item.year}</Text>
             <Icon
               type="material-community"
-              size={40}
+              size={30}
               name={iconName}
               color="red"
             />
@@ -38,7 +38,7 @@ const style = StyleSheet.create({
   rowContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'stretch',
+    alignItems: 'center',
   },
   image: {
     height: '100%',
@@ -46,7 +46,7 @@ const style = StyleSheet.create({
     flex: 1,
     alignSelf: 'flex-start',
   },
-  textContainer: {
+  detailsContainer: {
     height: '100%',
     resizeMode: 'contain',
     flex: 3,

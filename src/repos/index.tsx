@@ -1,2 +1,2 @@
-export * from './FSRepo';
-export * from './Repo';
+export * from './fsSampleRepo';
+export * from './repo';

@@ -1,5 +1,5 @@
 import React from 'react';
-import MoviesView from './MoviesView';
+import MoviesView from './moviesView';
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
