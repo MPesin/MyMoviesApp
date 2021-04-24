@@ -1,12 +1,16 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {FlatList} from 'react-native';
-import {MoviesHandler} from '../models';
-import {FSRepo} from '../repos';
+import {MovieItem, MoviesHandler} from '../models';
+import {FSSampleRepo} from '../repos';
 import {ListItemRenderer} from './components';
-//import {Styles} from '../themes';
 
 export default function MoviesView() {
-  const moviesHandler = new MoviesHandler(new FSRepo());
-  const moviesData = moviesHandler.loadAllMovies();
-  return <FlatList data={moviesData} renderItem={ListItemRenderer} />;
+  const [movies, setMovies] = useState<MovieItem[]>([]);
+  useEffect(() => {
+    const moviesHandler = new MoviesHandler(new FSSampleRepo());
+    const moviesData = moviesHandler.loadMoviesFromRepo();
+    setMovies(moviesData);
+  }, [movies]);
+
+  return <FlatList data={movies} renderItem={ListItemRenderer} />;
 }
