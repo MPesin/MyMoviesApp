@@ -7,13 +7,17 @@ interface MoviesState {
 
 const initalState: MoviesState = {movies: []};
 
+function addMovieToState(state: MoviesState, movie: MovieItem) {
+  state.movies.push(movie);
+}
+
 export function moviesReducer(
   state: MoviesState = initalState,
   action: MoviesActionTypes,
 ): MoviesState {
   switch (action.type) {
     case ADD_MOVIE: {
-      state.movies.push(action.payload);
+      addMovieToState(state, action.payload);
       return {
         ...state,
       };

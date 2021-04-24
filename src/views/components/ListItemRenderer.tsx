@@ -6,7 +6,7 @@ import {MovieItem} from '../../models';
 const ICON_FAVORIVE_SELECTED = 'heart';
 const ICON_FAVORIVE_NOT_SELECTED = 'heart-outline';
 
-export function ListItemRenderer({item}: {item: MovieItem}) {
+export function listItemRenderer({item}: {item: MovieItem}) {
   const isFavoriteSelected = false; // TODO - get value using redux.
   let iconName = isFavoriteSelected
     ? ICON_FAVORIVE_SELECTED

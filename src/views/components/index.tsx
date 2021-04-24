@@ -1,1 +1,2 @@
-export * from './ListItemRenderer';
+export * from './listItemRenderer';
+export * from './moviesList';
