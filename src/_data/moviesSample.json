@@ -5,8 +5,7 @@
     "rating": 5,
     "catagory": "Romance/Drama",
     "poster": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Poster_-_Gone_With_the_Wind_01.jpg/1024px-Poster_-_Gone_With_the_Wind_01.jpg",
-    "year": 1939,
-    "isFavorite": false
+    "year": 1939
   },
   {
     "id": "2",
@@ -14,8 +13,7 @@
     "rating": 4,
     "catagory": "Comady/Fantasy",
     "poster": "https://upload.wikimedia.org/wikipedia/en/2/2f/Ghostbusters_%281984%29_theatrical_poster.png",
-    "year": 1984,
-    "isFavorite": false
+    "year": 1984
   },
   {
     "id": "3",
@@ -23,8 +21,7 @@
     "rating": 5,
     "catagory": "Adventure/Family",
     "poster": "https://upload.wikimedia.org/wikipedia/en/6/66/E_t_the_extra_terrestrial_ver3.jpg",
-    "year": 1982,
-    "isFavorite": false
+    "year": 1982
   },
   {
     "id": "4",
@@ -32,7 +29,6 @@
     "rating": 4,
     "catagory": "Adventure/Family",
     "poster": "https://upload.wikimedia.org/wikipedia/en/0/0e/Hook_poster_transparent.png",
-    "year": 1991,
-    "isFavorite": false
+    "year": 1991
   }
 ]

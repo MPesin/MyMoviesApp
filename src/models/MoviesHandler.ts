@@ -1,7 +1,7 @@
 import {Repo} from '../repos';
 import {MovieItem} from '../services/movieItem';
 import {store} from '../redux/store';
-import {requestFavorites} from '../redux/actions';
+import {requestMovies} from '../redux';
 
 export class MoviesHandler {
   repo: Repo;
@@ -12,7 +12,7 @@ export class MoviesHandler {
 
   public updateMovies() {
     const movies = this.loadMoviesFromRepo();
-    store.dispatch(requestFavorites(movies));
+    store.dispatch(requestMovies(movies));
   }
 
   public loadMoviesFromRepo(): MovieItem[] {

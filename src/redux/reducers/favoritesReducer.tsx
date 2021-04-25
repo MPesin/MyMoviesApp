@@ -23,9 +23,9 @@ function addFavoriteToState(
 
 function removeFavoriteFromState(
   state: FavoritesState,
-  id: string,
+  movie: MovieItem,
 ): FavoritesState {
-  const index = state.favorites.findIndex(item => item.id === id);
+  const index = state.favorites.findIndex(item => item.id === movie.id);
   state.favorites.slice(index, 1);
   return state;
 }

@@ -5,5 +5,4 @@ export interface MovieItem {
   catagory: string;
   poster: string;
   year: number;
-  isFavorite: boolean;
 }

@@ -16,7 +16,7 @@ export interface AddFavoriteAction {
 
 export interface RemoveFavoriteAction {
   type: typeof REMOVE_FAVORITE;
-  payload: string;
+  payload: MovieItem;
 }
 
 export type FavoritesActionTypes =

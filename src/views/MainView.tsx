@@ -30,10 +30,10 @@ export const MainView = () => {
           component={FavoritesView}
           options={{
             tabBarLabel: 'Favorites',
-            tabBarIcon: () => (
+            tabBarIcon: ({color}) => (
               <MaterialCommunityIcons
+                color={color}
                 name="heart-multiple"
-                color={'red'}
                 size={30}
               />
             ),

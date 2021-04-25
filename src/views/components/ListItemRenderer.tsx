@@ -1,32 +1,25 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {Card, Button, Icon, Text, Rating} from 'react-native-elements';
 import {View, StyleSheet, Image} from 'react-native';
 import {FavoritesHandler, MovieItem} from '../../models';
-import {RootState, useAppSelector} from '../../redux';
+import {store} from '../../redux';
 
 const ICON_FAVORIVE_SELECTED = 'heart';
 const ICON_FAVORIVE_NOT_SELECTED = 'heart-outline';
-
 const favoritesHandler = new FavoritesHandler();
-const favoriteSelector = (state: RootState) => state.favorites;
 
 export function ListItemRenderer({item}: {item: MovieItem}) {
-  const [iconName, setIconName] = useState(ICON_FAVORIVE_NOT_SELECTED);
+  function isFavorite(): boolean {
+    const favorites = store.getState().favorites.favorites;
+    const movie = favorites
+      ? favorites.find(favorite => favorite.id === item.id)
+      : undefined;
+    return movie ? true : false;
+  }
 
-  const favorites = useAppSelector(favoriteSelector).favorites; // subscribe to changes in favorites in the store.
-
-  useEffect(() => {
-    const favMovie = favorites.find(favorite => favorite.id === item.id);
-    let isFavorite = false;
-    if (favMovie) {
-      isFavorite = favMovie.isFavorite;
-    }
-    const targetIconName = isFavorite
-      ? ICON_FAVORIVE_SELECTED
-      : ICON_FAVORIVE_NOT_SELECTED;
-    setIconName(targetIconName);
-  }, [iconName, favorites, item.id]);
-
+  const iconName = isFavorite()
+    ? ICON_FAVORIVE_SELECTED
+    : ICON_FAVORIVE_NOT_SELECTED;
   return (
     <Card>
       <View style={style.rowContainer}>
@@ -45,6 +38,7 @@ export function ListItemRenderer({item}: {item: MovieItem}) {
                   color="red"
                 />
               }
+              buttonStyle={style.favoriteButton}
               type="solid"
               onPress={_ => favoritesHandler.addRemoveFavoriteMovie(item)}
             />
@@ -72,5 +66,8 @@ const style = StyleSheet.create({
     resizeMode: 'contain',
     flex: 3,
     alignSelf: 'flex-end',
+  },
+  favoriteButton: {
+    backgroundColor: 'transparent',
   },
 });
