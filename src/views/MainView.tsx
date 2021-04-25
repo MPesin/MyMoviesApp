@@ -1,5 +1,6 @@
 import React from 'react';
 import MoviesView from './moviesView';
+import FavoritesView from './favoritesView';
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -21,6 +22,20 @@ export const MainView = () => {
             tabBarLabel: 'Movies',
             tabBarIcon: ({color}) => (
               <MaterialCommunityIcons name="movie" color={color} size={30} />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Favorites"
+          component={FavoritesView}
+          options={{
+            tabBarLabel: 'Favorites',
+            tabBarIcon: () => (
+              <MaterialCommunityIcons
+                name="heart-multiple"
+                color={'red'}
+                size={30}
+              />
             ),
           }}
         />
