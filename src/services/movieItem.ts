@@ -1,5 +1,5 @@
 export interface MovieItem {
-  id: string;
+  id: number;
   title: string;
   rating: number;
   catagory: string;

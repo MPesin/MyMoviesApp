@@ -1,5 +1,4 @@
 import {Repo} from '../repos';
-import {MovieItem} from '../services/movieItem';
 import {store} from '../redux/store';
 import {requestMovies} from '../redux';
 
@@ -10,12 +9,11 @@ export class MoviesHandler {
     this.repo = repo;
   }
 
-  public updateMovies() {
-    const movies = this.loadMoviesFromRepo();
+  /**
+   * updateMovies updates the store with the movies from the repository.
+   */
+  public async updateMovies() {
+    const movies = await this.repo.getAll();
     store.dispatch(requestMovies(movies));
-  }
-
-  public loadMoviesFromRepo(): MovieItem[] {
-    return this.repo.getAll();
   }
 }

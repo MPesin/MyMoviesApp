@@ -1,5 +1,5 @@
 import {MovieItem} from '../models';
 
 export interface Repo {
-  getAll: () => MovieItem[];
+  getAll: () => Promise<MovieItem[]>;
 }
