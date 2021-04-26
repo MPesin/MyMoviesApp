@@ -1,23 +1,14 @@
 import React from 'react';
 import {Card, Button, Icon, Text, Rating} from 'react-native-elements';
-import {View, StyleSheet, Image} from 'react-native';
+import {View, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import {FavoritesHandler, MovieItem} from '../../models';
-import {store} from '../../redux';
 
 const ICON_FAVORIVE_SELECTED = 'heart';
 const ICON_FAVORIVE_NOT_SELECTED = 'heart-outline';
 const favoritesHandler = new FavoritesHandler();
 
 export function ListItemRenderer({item}: {item: MovieItem}) {
-  function isFavorite(): boolean {
-    const favorites = store.getState().favorites.favorites;
-    const movie = favorites
-      ? favorites.find(favorite => favorite.id === item.id)
-      : undefined;
-    return movie ? true : false;
-  }
-
-  const iconName = isFavorite()
+  const iconName = item.isFavorite
     ? ICON_FAVORIVE_SELECTED
     : ICON_FAVORIVE_NOT_SELECTED;
   return (
@@ -41,6 +32,7 @@ export function ListItemRenderer({item}: {item: MovieItem}) {
               buttonStyle={style.favoriteButton}
               type="solid"
               onPress={_ => favoritesHandler.addRemoveFavoriteMovie(item)}
+              TouchableComponent={TouchableOpacity}
             />
           </View>
         </View>

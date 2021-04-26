@@ -1,7 +1,5 @@
 import {
-  FETCH_FAVORITES,
   ADD_FAVORITE,
-  FetchFavoriteAction,
   AddFavoriteAction,
   RemoveFavoriteAction,
   REMOVE_FAVORITE,
@@ -9,20 +7,14 @@ import {
 import {ActionCreator} from 'redux';
 import {MovieItem} from '../../services';
 
-export const requestFavorites: ActionCreator<FetchFavoriteAction> = (
-  favorites: MovieItem[],
-) => {
-  return {type: FETCH_FAVORITES, payload: favorites};
-};
-
 export const addFavorite: ActionCreator<AddFavoriteAction> = (
-  newFavorite: MovieItem,
+  movie: MovieItem,
 ) => {
-  return {type: ADD_FAVORITE, payload: newFavorite};
+  return {type: ADD_FAVORITE, payload: movie};
 };
 
 export const removeFavorite: ActionCreator<RemoveFavoriteAction> = (
-  indexToRemove: number,
+  movie: MovieItem,
 ) => {
-  return {type: REMOVE_FAVORITE, payload: indexToRemove};
+  return {type: REMOVE_FAVORITE, payload: movie};
 };

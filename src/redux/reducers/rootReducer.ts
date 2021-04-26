@@ -4,5 +4,4 @@ import {favoritesReducer} from './favoritesReducer';
 
 export const rootReducer = combineReducers({
   movies: moviesReducer,
-  favorites: favoritesReducer,
 });

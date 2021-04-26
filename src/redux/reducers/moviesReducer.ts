@@ -1,25 +1,32 @@
 import {MovieItem} from '../../models';
-import {ADD_MOVIE, FETCH_MOVIES, MoviesActionTypes} from '../types';
+import {
+  ADD_FAVORITE,
+  REMOVE_FAVORITE,
+  FETCH_MOVIES,
+  MoviesActionTypes,
+} from '../types';
 
-interface MoviesState {
+export interface MoviesState {
   movies: MovieItem[];
 }
 
-const initalState: MoviesState = {movies: []};
-
-function addMovieToState(state: MoviesState, movie: MovieItem) {
-  state.movies.push(movie);
-}
+export const initalState: MoviesState = {movies: []};
 
 export function moviesReducer(
   state: MoviesState = initalState,
   action: MoviesActionTypes,
 ): MoviesState {
   switch (action.type) {
-    case ADD_MOVIE: {
-      addMovieToState(state, action.payload);
+    case ADD_FAVORITE: {
+      const movies = setMovieToFavorite(state, action.payload);
       return {
-        ...state,
+        movies: movies,
+      };
+    }
+    case REMOVE_FAVORITE: {
+      const movies = setMovieToNotFavorite(state, action.payload);
+      return {
+        movies: movies,
       };
     }
     case FETCH_MOVIES: {
@@ -32,4 +39,27 @@ export function moviesReducer(
       return state;
     }
   }
+}
+
+function setMovieToFavorite(state: MoviesState, movie: MovieItem) {
+  return setMovieIsFavorite(state, movie, true);
+}
+
+function setMovieToNotFavorite(state: MoviesState, movie: MovieItem) {
+  return setMovieIsFavorite(state, movie, false);
+}
+
+function setMovieIsFavorite(
+  state: MoviesState,
+  movie: MovieItem,
+  isFavorite: boolean,
+) {
+  return state.movies.map(item => {
+    if (item.id === movie.id) {
+      item.isFavorite = isFavorite;
+      return item;
+    }
+
+    return item;
+  });
 }

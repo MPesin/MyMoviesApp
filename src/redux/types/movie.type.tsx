@@ -1,16 +1,24 @@
 import {MovieItem} from '../../models';
 
 export const FETCH_MOVIES = 'FETCH_MOVIES';
-export const ADD_MOVIE = 'ADD_MOVIE';
+export const ADD_FAVORITE = 'ADD_MOVIE';
+export const REMOVE_FAVORITE = 'REMOVE_FAVORITE';
 
 export interface FetchMoviesAction {
   type: typeof FETCH_MOVIES;
   payload: MovieItem[];
 }
 
-export interface AddMovieAction {
-  type: typeof ADD_MOVIE;
+export interface AddFavoriteAction {
+  type: typeof ADD_FAVORITE;
   payload: MovieItem;
 }
 
-export type MoviesActionTypes = FetchMoviesAction | AddMovieAction;
+export interface RemoveFavoriteAction {
+  type: typeof REMOVE_FAVORITE;
+  payload: MovieItem;
+}
+
+export type FavoritesActionTypes = AddFavoriteAction | RemoveFavoriteAction;
+
+export type MoviesActionTypes = FetchMoviesAction | FavoritesActionTypes;
