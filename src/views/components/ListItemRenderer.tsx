@@ -1,5 +1,5 @@
 import React from 'react';
-import {Card, Button, Icon, Text, Rating} from 'react-native-elements';
+import {Card, Button, Icon, Text} from 'react-native-elements';
 import {View, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import {FavoritesHandler, MovieItem} from '../../models';
 
@@ -18,7 +18,16 @@ export function ListItemRenderer({item}: {item: MovieItem}) {
         <View style={style.detailsContainer}>
           <Text h3>{item.title}</Text>
           <View style={style.rowContainer}>
-            <Rating imageSize={20} readonly startingValue={item.rating} />
+            <View style={style.rowContainer}>
+              <Icon
+                type="material-community"
+                size={25}
+                name="star"
+                color="#FDCC0D"
+              />
+              <Text h4>{item.rating}</Text>
+              <Text>/10</Text>
+            </View>
             <Text h4>{item.year}</Text>
             <Button
               icon={
