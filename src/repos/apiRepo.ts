@@ -2,13 +2,23 @@ import {Repo} from '.';
 import {MovieItem, GenerItem} from '../services';
 import Config from 'react-native-config';
 import axios from 'axios';
+import {getLocales} from 'react-native-localize';
 
 const TOP_RATED_PATH = '/movie/top_rated';
 const GENERS_PATH = '/genre/movie/list';
+const DEFAULT_COUNTRY_CODE = 'US';
 
 export class ApiRepo implements Repo {
   geners: GenerItem[] = [];
   totalPages: number = 1;
+  region: string;
+
+  constructor() {
+    const currentCountryCode = getLocales()[0]?.countryCode;
+    this.region = currentCountryCode
+      ? currentCountryCode
+      : DEFAULT_COUNTRY_CODE;
+  }
 
   public async getTopRatedAsync(): Promise<MovieItem[]> {
     const responseArray = await this.getTopRatedResponseArrayAsync(1);
@@ -51,7 +61,7 @@ export class ApiRepo implements Repo {
   }
 
   private buildUrl(path: string, pageNumber: number): string {
-    let url = `${Config.API_URL}${path}?api_key=${Config.API_KEY}`;
+    let url = `${Config.API_URL}${path}?api_key=${Config.API_KEY}&region=${this.region}`;
     if (pageNumber > 0) {
       url += `&page=${pageNumber}`;
     }
