@@ -1,6 +1,6 @@
 import {Repo} from '../repos';
 import {store} from '../redux/store';
-import {requestMovies, addMovies} from '../redux';
+import {addMovies} from '../redux';
 import {StorageManager} from '.';
 import {MovieItem} from '../services';
 
@@ -19,21 +19,38 @@ export class MoviesHandler {
    */
   public async updateMoviesAsync() {
     const movies = await this.repo.getTopRatedAsync();
-    await this.setFavoritesFromStorageAsync(movies);
-    store.dispatch(requestMovies(movies));
+    const moviesWithFavorites = await this.setFavoritesFromStorageAsync(movies);
+    store.dispatch(addMovies(moviesWithFavorites));
   }
 
-  public async setFavoritesFromStorageAsync(movies: MovieItem[]) {
+  private async setFavoritesFromStorageAsync(movies: MovieItem[]) {
     try {
       const favoritesIDs = await this.storageManager.getAllStoredIDsAsync();
-      movies.forEach(movie => {
-        const movieIDString = `${movie.id}`;
-        const findResult = favoritesIDs.find(id => id === movieIDString);
-        if (findResult) {
-          movie.isFavorite = true;
+      favoritesIDs.forEach(async favoriteID => {
+        const resultIndex = movies.findIndex(movie => movie.id === +favoriteID);
+        if (resultIndex >= 0) {
+          movies[resultIndex].isFavorite = true;
+        } else {
+          const fetched = await this.fetchMovieByIdAsync(+favoriteID);
+          if (fetched) {
+            fetched.isFavorite = true;
+            movies.push(fetched);
+          }
         }
       });
-    } catch (err) {}
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  private async fetchMovieByIdAsync(
+    id: number,
+  ): Promise<MovieItem | undefined> {
+    const requestedMovie = await this.repo.getMovieByID(id);
+    if (requestedMovie) {
+      return requestedMovie;
+    }
+    return undefined;
   }
 
   public async fetchMoreMoviesAsync() {
@@ -43,5 +60,15 @@ export class MoviesHandler {
 
   public resetPageToOne() {
     this.moviesPage = 1;
+  }
+
+  public async searchMovieByTitleAsync(title: string) {
+    let results: MovieItem[] = [];
+    try {
+      results = await this.repo.searchByMovieTitle(title);
+    } catch (err) {
+      console.log(err);
+    }
+    return results;
   }
 }

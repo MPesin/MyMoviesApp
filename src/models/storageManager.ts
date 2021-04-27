@@ -14,8 +14,8 @@ export class StorageManager {
       storedList.push(`${item.id}`);
       const dataToStore = JSON.stringify(storedList);
       await AsyncStorage.setItem(STORAGE_KEY, dataToStore);
-    } catch (e) {
-      // saving error
+    } catch (err) {
+      console.log(err);
     }
   }
 
@@ -27,8 +27,8 @@ export class StorageManager {
       storedList = storedList.filter(item => id !== item);
       const dataToStore = JSON.stringify(storedList);
       await AsyncStorage.setItem(STORAGE_KEY, dataToStore);
-    } catch (e) {
-      // saving error
+    } catch (err) {
+      console.log(err);
     }
   }
 
@@ -37,6 +37,7 @@ export class StorageManager {
       const storedData = await this.getStoredData();
       return JSON.parse(storedData);
     } catch (err) {
+      console.log(err);
       return [];
     }
   }
@@ -47,6 +48,7 @@ export class StorageManager {
       const data = storedData ? storedData : JSON.stringify([]); // if no data then return a stringifies empty list.
       return data;
     } catch (err) {
+      console.log(err);
       return JSON.stringify([]);
     }
   }

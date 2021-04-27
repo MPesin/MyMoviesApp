@@ -4,8 +4,10 @@ import Config from 'react-native-config';
 import axios from 'axios';
 import {getLocales} from 'react-native-localize';
 
-const TOP_RATED_PATH = '/movie/top_rated';
+const GET_MOVIE = '/movie';
+const TOP_RATED_PATH = `${GET_MOVIE}/top_rated`;
 const GENERS_PATH = '/genre/movie/list';
+const SEARCH_PATH = '/search/movie';
 const DEFAULT_COUNTRY_CODE = 'US';
 
 export class ApiRepo implements Repo {
@@ -36,6 +38,26 @@ export class ApiRepo implements Repo {
     return movies;
   }
 
+  public async getMovieByID(id: number): Promise<MovieItem | undefined> {
+    const url = this.buildUrl(`${GET_MOVIE}/${id}`);
+    const response = await axios(url);
+    const responseMovie = response.data;
+    if (responseMovie) {
+      return this.convertResponseItemToMovieItem(responseMovie);
+    } else {
+      return undefined;
+    }
+  }
+
+  public async searchByMovieTitle(title: string): Promise<MovieItem[]> {
+    const fixedTitle = title.replace('+', ' ');
+    const url = `${this.buildUrlWithRegion(SEARCH_PATH)}&query=${fixedTitle}`;
+    const response = await axios.get(url);
+    const searchResults = response.data.results;
+    const searchedMovies = this.convertResponseToMovieItem(searchResults);
+    return searchedMovies;
+  }
+
   private async getTopRatedResponseArrayAsync(
     pageNumber: number,
   ): Promise<any[]> {
@@ -60,11 +82,17 @@ export class ApiRepo implements Repo {
     }
   }
 
-  private buildUrl(path: string, pageNumber: number): string {
-    let url = `${Config.API_URL}${path}?api_key=${Config.API_KEY}&region=${this.region}`;
+  private buildUrl(path: string, pageNumber: number = 0): string {
+    let url = `${Config.API_URL}${path}?api_key=${Config.API_KEY}`;
     if (pageNumber > 0) {
       url += `&page=${pageNumber}`;
     }
+    return url;
+  }
+
+  private buildUrlWithRegion(path: string, pageNumber: number = 0): string {
+    let url = this.buildUrl(path, pageNumber);
+    url += `&region=${this.region}`;
     return url;
   }
 
