@@ -1,4 +1,4 @@
-import {MovieItem} from '../../models';
+import {MovieItem} from '../../services';
 import {
   ADD_FAVORITE,
   REMOVE_FAVORITE,
@@ -19,7 +19,7 @@ export function moviesReducer(
 ): MoviesState {
   switch (action.type) {
     case ADD_FAVORITE: {
-      const movies = setMovieToFavorite(state, action.payload);
+      const movies = setMovieToFavoriteAsync(state, action.payload);
       return {
         movies: movies,
       };
@@ -48,11 +48,17 @@ export function moviesReducer(
   }
 }
 
-function setMovieToFavorite(state: MoviesState, movie: MovieItem) {
+function setMovieToFavoriteAsync(
+  state: MoviesState,
+  movie: MovieItem,
+): MovieItem[] {
   return setMovieIsFavorite(state, movie, true);
 }
 
-function setMovieToNotFavorite(state: MoviesState, movie: MovieItem) {
+function setMovieToNotFavorite(
+  state: MoviesState,
+  movie: MovieItem,
+): MovieItem[] {
   return setMovieIsFavorite(state, movie, false);
 }
 
@@ -60,7 +66,7 @@ function setMovieIsFavorite(
   state: MoviesState,
   movie: MovieItem,
   isFavorite: boolean,
-) {
+): MovieItem[] {
   return state.movies.map(item => {
     if (item.id === movie.id) {
       item.isFavorite = isFavorite;

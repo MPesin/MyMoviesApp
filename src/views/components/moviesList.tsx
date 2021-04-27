@@ -1,12 +1,12 @@
 import React, {useState} from 'react';
-import {FlatList, Button} from 'react-native';
-import {MoviesHandler} from '../../models';
+import {FlatList} from 'react-native';
+import {MoviesHandler, StorageManager} from '../../models';
 import {ApiRepo} from '../../repos';
 import {ListItemRenderer} from '../components';
 import {RootState, useAppSelector} from '../../redux';
 
 const moviesSelector = (state: RootState) => state.movies;
-const moviesHandler = new MoviesHandler(new ApiRepo());
+const moviesHandler = new MoviesHandler(new ApiRepo(), new StorageManager());
 moviesHandler.updateMoviesAsync();
 
 export function MoviesList() {

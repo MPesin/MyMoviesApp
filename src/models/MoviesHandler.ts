@@ -1,13 +1,17 @@
 import {Repo} from '../repos';
 import {store} from '../redux/store';
 import {requestMovies, addMovies} from '../redux';
+import {StorageManager} from '.';
+import {MovieItem} from '../services';
 
 export class MoviesHandler {
   repo: Repo;
   moviesPage: number = 1;
+  storageManager: StorageManager;
 
-  constructor(repo: Repo) {
+  constructor(repo: Repo, storageManager: StorageManager) {
     this.repo = repo;
+    this.storageManager = storageManager;
   }
 
   /**
@@ -15,7 +19,21 @@ export class MoviesHandler {
    */
   public async updateMoviesAsync() {
     const movies = await this.repo.getTopRatedAsync();
+    await this.setFavoritesFromStorageAsync(movies);
     store.dispatch(requestMovies(movies));
+  }
+
+  public async setFavoritesFromStorageAsync(movies: MovieItem[]) {
+    try {
+      const favoritesIDs = await this.storageManager.getAllStoredIDsAsync();
+      movies.forEach(movie => {
+        const movieIDString = `${movie.id}`;
+        const findResult = favoritesIDs.find(id => id === movieIDString);
+        if (findResult) {
+          movie.isFavorite = true;
+        }
+      });
+    } catch (err) {}
   }
 
   public async fetchMoreMoviesAsync() {

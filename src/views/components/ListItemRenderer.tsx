@@ -1,11 +1,14 @@
 import React from 'react';
 import {Card, Button, Icon, Text} from 'react-native-elements';
 import {View, StyleSheet, Image, TouchableOpacity} from 'react-native';
-import {FavoritesHandler, MovieItem} from '../../models';
+import {FavoritesHandler} from '../../models';
+import {MovieItem} from '../../services';
+import {StorageManager} from '../../models';
 
 const ICON_FAVORIVE_SELECTED = 'heart';
 const ICON_FAVORIVE_NOT_SELECTED = 'heart-outline';
-const favoritesHandler = new FavoritesHandler();
+
+const favoritesHandler = new FavoritesHandler(new StorageManager());
 
 export function ListItemRenderer({item}: {item: MovieItem}) {
   const iconName = item.isFavorite
@@ -16,9 +19,7 @@ export function ListItemRenderer({item}: {item: MovieItem}) {
       <View style={style.rowContainer}>
         <Image source={{uri: item.poster}} style={style.image} />
         <View style={style.detailsContainer}>
-          <Card.Title style={{alignSelf: 'flex-start'}}>
-            {item.catagory}
-          </Card.Title>
+          <Card.Title style={style.cardTitle}>{item.catagory}</Card.Title>
           <Text h3>{item.title}</Text>
           <View style={style.rowContainer}>
             <View style={style.rowContainer}>
@@ -43,7 +44,9 @@ export function ListItemRenderer({item}: {item: MovieItem}) {
               }
               buttonStyle={style.favoriteButton}
               type="solid"
-              onPress={_ => favoritesHandler.addRemoveFavoriteMovie(item)}
+              onPress={async _ =>
+                favoritesHandler.addRemoveFavoriteMovieAsync(item)
+              }
               TouchableComponent={TouchableOpacity}
             />
           </View>
@@ -74,5 +77,8 @@ const style = StyleSheet.create({
   },
   favoriteButton: {
     backgroundColor: 'transparent',
+  },
+  cardTitle: {
+    alignSelf: 'flex-start',
   },
 });
