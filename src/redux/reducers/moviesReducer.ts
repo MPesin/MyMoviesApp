@@ -4,6 +4,7 @@ import {
   REMOVE_FAVORITE,
   FETCH_MOVIES,
   MoviesActionTypes,
+  ADD_MOVIES,
 } from '../types';
 
 export interface MoviesState {
@@ -33,6 +34,12 @@ export function moviesReducer(
       return {
         ...state,
         movies: action.payload,
+      };
+    }
+    case ADD_MOVIES: {
+      return {
+        ...state,
+        movies: [...state.movies, ...action.payload],
       };
     }
     default: {

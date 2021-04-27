@@ -1,5 +1,6 @@
 import {MovieItem} from '../models';
 
 export interface Repo {
-  getAll: () => Promise<MovieItem[]>;
+  getTopRatedAsync: () => Promise<MovieItem[]>;
+  getTopRatedByPageAsync: (pageNumber: number) => Promise<MovieItem[]>;
 }

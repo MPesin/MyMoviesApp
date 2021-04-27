@@ -8,17 +8,41 @@ const GENERS_PATH = '/genre/movie/list';
 
 export class ApiRepo implements Repo {
   geners: GenerItem[] = [];
-  public async getAll(): Promise<MovieItem[]> {
-    const responseArray = await this.getTopRatedResponseArray();
-    this.geners = await this.getGeners();
+  totalPages: number = 1;
+
+  public async getTopRatedAsync(): Promise<MovieItem[]> {
+    const responseArray = await this.getTopRatedResponseArrayAsync(1);
+    this.geners = await this.getGenersAsync();
     let movies: MovieItem[] = this.convertResponseToMovieItem(responseArray);
     return movies;
   }
 
-  private async getTopRatedResponseArray(): Promise<any[]> {
+  public async getTopRatedByPageAsync(
+    pageNumber: number,
+  ): Promise<MovieItem[]> {
+    const responseArray = await this.getTopRatedResponseArrayAsync(pageNumber);
+    this.geners = await this.getGenersAsync();
+    let movies: MovieItem[] = this.convertResponseToMovieItem(responseArray);
+    return movies;
+  }
+
+  private async getTopRatedResponseArrayAsync(
+    pageNumber: number,
+  ): Promise<any[]> {
     try {
-      const url = this.buildUrl(TOP_RATED_PATH);
+      if (pageNumber > this.totalPages) {
+        return [];
+      }
+
+      const url = this.buildUrl(TOP_RATED_PATH, pageNumber);
       const response = await axios.get<any>(url);
+
+      // set total pages for future checks
+      const total = response.data.total_pages;
+      if (total !== this.totalPages) {
+        this.totalPages = total;
+      }
+
       return response.data.results;
     } catch (err) {
       console.log(err);
@@ -26,13 +50,17 @@ export class ApiRepo implements Repo {
     }
   }
 
-  private buildUrl(path: string): string {
-    return `${Config.API_URL}${path}?api_key=${Config.API_KEY}`;
+  private buildUrl(path: string, pageNumber: number): string {
+    let url = `${Config.API_URL}${path}?api_key=${Config.API_KEY}`;
+    if (pageNumber > 0) {
+      url += `&page=${pageNumber}`;
+    }
+    return url;
   }
 
-  private async getGeners(): Promise<GenerItem[]> {
+  private async getGenersAsync(): Promise<GenerItem[]> {
     try {
-      const url = this.buildUrl(GENERS_PATH);
+      const url = this.buildUrl(GENERS_PATH, 0);
       const genersRes = await axios.get<{genres: GenerItem[]}>(url);
       return genersRes.data.genres;
     } catch (err) {
@@ -68,15 +96,15 @@ export class ApiRepo implements Repo {
   }
 
   private printGenersOfMovie(ids: number[]): string {
-    let genersString = '';
+    let genersString: string[] = [];
     ids.forEach(id => {
       this.geners.forEach(gener => {
         if (id === gener.id) {
-          genersString += `${gener.name}/`;
+          genersString.push(gener.name);
         }
       });
     });
-    return genersString;
+    return genersString.join('/');
   }
 
   private buildImagePath(pathToImage: string): string {

@@ -1,8 +1,8 @@
 import {
   FETCH_MOVIES,
-  ADD_MOVIE,
+  ADD_MOVIES,
   FetchMoviesAction,
-  AddMovieAction,
+  AddMoviesAction,
 } from '../types';
 import {ActionCreator} from 'redux';
 import {MovieItem} from '../../services';
@@ -13,8 +13,8 @@ export const requestMovies: ActionCreator<FetchMoviesAction> = (
   return {type: FETCH_MOVIES, payload: movies};
 };
 
-export const addMovie: ActionCreator<AddMovieAction> = (
-  newMovie: MovieItem,
+export const addMovies: ActionCreator<AddMoviesAction> = (
+  movies: MovieItem[],
 ) => {
-  return {type: ADD_MOVIE, payload: newMovie};
+  return {type: ADD_MOVIES, payload: movies};
 };

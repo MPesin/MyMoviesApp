@@ -16,6 +16,9 @@ export function ListItemRenderer({item}: {item: MovieItem}) {
       <View style={style.rowContainer}>
         <Image source={{uri: item.poster}} style={style.image} />
         <View style={style.detailsContainer}>
+          <Card.Title style={{alignSelf: 'flex-start'}}>
+            {item.catagory}
+          </Card.Title>
           <Text h3>{item.title}</Text>
           <View style={style.rowContainer}>
             <View style={style.rowContainer}>
@@ -67,6 +70,7 @@ const style = StyleSheet.create({
     resizeMode: 'contain',
     flex: 3,
     alignSelf: 'flex-end',
+    marginStart: 10,
   },
   favoriteButton: {
     backgroundColor: 'transparent',
