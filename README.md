@@ -36,7 +36,7 @@ All of the code is located in the `./src` folder:
 - [Redux-Thunk](https://github.com/reduxjs/redux-thunk) - middleware for Redux that basically adds a clouser to our action functions, allowing it to delay the execiton and manage async actions better. I added it because API requests are asynchronous.
 - [React Navigation](https://reactnavigation.org/) - for **tab** navigation.
 - [React Native Elements](https://reactnativeelements.com/) - for better UI components.
-- [React Native Async Storage](https://github.com/react-native-async-storage/async-storage) - for saving key-value pairs in the mobile persistent memory.
+- [React Native Async Storage](https://github.com/react-native-async-storage/async-storage) - for saving/loading key-value pairs in/from the mobile persistent memory.
 - [axios](https://github.com/axios/axios) - for managing the requests to the API using _XMLHttpRequests_.
 
 # The Advanture of the Architecture
