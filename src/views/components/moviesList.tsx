@@ -11,7 +11,11 @@ const PLATFORM =
   Platform.OS === 'ios' || Platform.OS === 'android' ? Platform.OS : 'default';
 const moviesSelector = (state: RootState) => state.movies;
 const moviesHandler = new MoviesHandler(new ApiRepo(), new StorageManager());
-moviesHandler.updateMoviesAsync();
+try {
+  moviesHandler.updateMoviesAsync();
+} catch (err) {
+  console.error(err);
+}
 
 export function MoviesList() {
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -32,7 +36,7 @@ export function MoviesList() {
     try {
       await moviesHandler.fetchMoreMoviesAsync();
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   }
 
@@ -46,7 +50,7 @@ export function MoviesList() {
       }
       setIsRefreshing(false);
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   }
 
@@ -55,7 +59,7 @@ export function MoviesList() {
       moviesHandler.resetPageToOne();
       setListData(storeData);
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   }
 
@@ -68,7 +72,7 @@ export function MoviesList() {
         setListData(findResult);
       }
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   }
 
@@ -76,7 +80,7 @@ export function MoviesList() {
     <View>
       <SearchBar
         platform={PLATFORM}
-        placeholder="Search for a title"
+        placeholder="Search for a movie title"
         onChangeText={onChangeTextEvent}
         onCancel={onRefreshEvent}
         value={searchText}

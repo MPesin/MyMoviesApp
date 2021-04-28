@@ -1,6 +1,6 @@
 import {MovieItem} from '../services';
 import {store} from '../redux';
-import {addFavorite, addMovies, removeFavorite} from '../redux';
+import {addFavorite, removeFavorite} from '../redux';
 import {StorageManager} from '.';
 
 export class FavoritesHandler {
@@ -11,59 +11,32 @@ export class FavoritesHandler {
   }
 
   public async addRemoveFavoriteMovieAsync(movie: MovieItem) {
-    if (movie.isFavorite) {
-      await this.removeFavoriteAsync(movie);
-    } else {
-      await this.addFavoriteAsync(movie);
+    try {
+      if (movie.isFavorite) {
+        await this.removeFavoriteAsync(movie);
+      } else {
+        await this.addFavoriteAsync(movie);
+      }
+    } catch (err) {
+      console.error(err);
     }
   }
 
   public async removeFavoriteAsync(movie: MovieItem) {
-    store.dispatch(removeFavorite(movie));
-    await this.storageManager.deleteMovieAsync(movie);
+    try {
+      store.dispatch(removeFavorite(movie));
+      await this.storageManager.deleteMovieAsync(movie);
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   public async addFavoriteAsync(movie: MovieItem) {
-    const isFavorite = await this.checkIfInFavoritesAsync(movie);
-    if (isFavorite) {
-      return;
-    }
-    store.dispatch(addFavorite(movie));
-    await this.storageManager.saveMovieAsync(movie);
-  }
-
-  private async checkIfInFavoritesAsync(movie: MovieItem): Promise<boolean> {
     try {
-      const stored = await this.storageManager.getAllStoredIDsAsync();
-      const thisMovieID = stored.find(id => +id === movie.id);
-      return thisMovieID ? true : false;
+      store.dispatch(addFavorite(movie));
+      await this.storageManager.saveMovieAsync(movie);
     } catch (err) {
-      console.log(err);
-      return false;
+      console.error(err);
     }
-  }
-
-  /**
-   * If the @param movie isn't in the store then add it.
-   */
-  private checkMovieInStoreOrSaveMovie(movie: MovieItem) {
-    const isInStore = this.checkInStore(movie);
-    if (!isInStore) {
-      movie.isFavorite = true;
-      store.dispatch(addMovies([movie]));
-    }
-  }
-
-  private checkInStore(movie: MovieItem): boolean {
-    const currentMoviesState = store.getState().movies.movies;
-    let isInStore = false;
-    let i = 0;
-    for (i; i < currentMoviesState.length; i++) {
-      if (currentMoviesState[i].id === movie.id) {
-        isInStore = true;
-        break;
-      }
-    }
-    return isInStore;
   }
 }

@@ -15,32 +15,41 @@ export class MoviesHandler {
   }
 
   /**
-   * updateMovies updates the store with the movies from the repository.
+   * updateMoviesAsync updates the store with the movies from the repository.
    */
   public async updateMoviesAsync() {
-    const movies = await this.repo.getTopRatedAsync();
-    const moviesWithFavorites = await this.setFavoritesFromStorageAsync(movies);
-    store.dispatch(addMovies(moviesWithFavorites));
+    try {
+      let movies = await this.repo.getTopRatedAsync();
+      movies = await this.setFavoritesFromStorageAsync(movies);
+      store.dispatch(addMovies(movies));
+    } catch (err) {
+      console.error(err);
+    }
   }
 
-  private async setFavoritesFromStorageAsync(movies: MovieItem[]) {
-    try {
-      const favoritesIDs = await this.storageManager.getAllStoredIDsAsync();
-      favoritesIDs.forEach(async favoriteID => {
-        const resultIndex = movies.findIndex(movie => movie.id === +favoriteID);
-        if (resultIndex >= 0) {
-          movies[resultIndex].isFavorite = true;
-        } else {
-          const fetched = await this.fetchMovieByIdAsync(+favoriteID);
+  private async setFavoritesFromStorageAsync(
+    movies: MovieItem[],
+  ): Promise<MovieItem[]> {
+    const favoritesIDs = await this.storageManager.getAllStoredIDsAsync();
+    let i = 0;
+    for (i; i < favoritesIDs.length; i++) {
+      const idInt = parseInt(favoritesIDs[i]);
+      const resultIndex = movies.findIndex(movie => movie.id === idInt);
+      if (resultIndex >= 0) {
+        movies[resultIndex].isFavorite = true;
+      } else {
+        try {
+          const fetched = await this.fetchMovieByIdAsync(idInt);
           if (fetched) {
             fetched.isFavorite = true;
             movies.push(fetched);
           }
+        } catch (err) {
+          console.error(err);
         }
-      });
-    } catch (err) {
-      console.log(err);
+      }
     }
+    return movies;
   }
 
   private async fetchMovieByIdAsync(
@@ -54,8 +63,12 @@ export class MoviesHandler {
   }
 
   public async fetchMoreMoviesAsync() {
-    const movies = await this.repo.getTopRatedByPageAsync(++this.moviesPage);
-    store.dispatch(addMovies(movies));
+    try {
+      const movies = await this.repo.getTopRatedByPageAsync(++this.moviesPage);
+      store.dispatch(addMovies(movies));
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   public resetPageToOne() {
@@ -67,7 +80,7 @@ export class MoviesHandler {
     try {
       results = await this.repo.searchByMovieTitle(title);
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
     return results;
   }

@@ -21,13 +21,13 @@ export function moviesReducer(
     case ADD_FAVORITE: {
       const movies = setMovieToFavoriteAsync(state, action.payload);
       return {
-        movies: movies,
+        movies: [...movies],
       };
     }
     case REMOVE_FAVORITE: {
       const movies = setMovieToNotFavorite(state, action.payload);
       return {
-        movies: movies,
+        movies: [...movies],
       };
     }
     case FETCH_MOVIES: {
@@ -67,12 +67,20 @@ function setMovieIsFavorite(
   movie: MovieItem,
   isFavorite: boolean,
 ): MovieItem[] {
-  return state.movies.map(item => {
+  let isInStore = false;
+  const newMoviesState = state.movies.map(item => {
     if (item.id === movie.id) {
       item.isFavorite = isFavorite;
+      isInStore = true;
       return item;
     }
-
     return item;
   });
+
+  if (!isInStore) {
+    movie.isFavorite = isFavorite;
+    newMoviesState.push(movie);
+  }
+
+  return newMoviesState;
 }

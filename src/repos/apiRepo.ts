@@ -13,10 +13,10 @@ const DEFAULT_COUNTRY_CODE = 'US';
 export class ApiRepo implements Repo {
   geners: GenerItem[] = [];
   totalPages: number = 1;
-  region: string;
+  region: string = DEFAULT_COUNTRY_CODE;
 
   constructor() {
-    const currentCountryCode = getLocales()[0]?.countryCode;
+    const currentCountryCode = getLocales()[1]?.countryCode;
     this.region = currentCountryCode
       ? currentCountryCode
       : DEFAULT_COUNTRY_CODE;
@@ -25,7 +25,9 @@ export class ApiRepo implements Repo {
   public async getTopRatedAsync(): Promise<MovieItem[]> {
     const responseArray = await this.getTopRatedResponseArrayAsync(1);
     this.geners = await this.getGenersAsync();
-    let movies: MovieItem[] = this.convertResponseToMovieItem(responseArray);
+    let movies: MovieItem[] = this.convertResponseArrayToMovieItems(
+      responseArray,
+    );
     return movies;
   }
 
@@ -34,19 +36,31 @@ export class ApiRepo implements Repo {
   ): Promise<MovieItem[]> {
     const responseArray = await this.getTopRatedResponseArrayAsync(pageNumber);
     this.geners = await this.getGenersAsync();
-    let movies: MovieItem[] = this.convertResponseToMovieItem(responseArray);
+    let movies: MovieItem[] = this.convertResponseArrayToMovieItems(
+      responseArray,
+    );
     return movies;
   }
 
-  public async getMovieByID(id: number): Promise<MovieItem | undefined> {
+  public async getMovieByID(id: number): Promise<MovieItem> {
     const url = this.buildUrl(`${GET_MOVIE}/${id}`);
     const response = await axios(url);
     const responseMovie = response.data;
-    if (responseMovie) {
-      return this.convertResponseItemToMovieItem(responseMovie);
-    } else {
-      return undefined;
-    }
+    const genres: GenerItem[] = responseMovie.genres;
+    const genresString = this.getGenresFromMovieID(genres);
+    const movie = this.convertResponseItemToMovieItem(
+      responseMovie,
+      genresString,
+    );
+    return movie;
+  }
+
+  private getGenresFromMovieID(genres: GenerItem[]): string {
+    let strArr: string[] = [];
+    genres.forEach(genre => {
+      strArr.push(genre.name);
+    });
+    return this.joinStringArray(strArr);
   }
 
   public async searchByMovieTitle(title: string): Promise<MovieItem[]> {
@@ -54,7 +68,7 @@ export class ApiRepo implements Repo {
     const url = `${this.buildUrlWithRegion(SEARCH_PATH)}&query=${fixedTitle}`;
     const response = await axios.get(url);
     const searchResults = response.data.results;
-    const searchedMovies = this.convertResponseToMovieItem(searchResults);
+    const searchedMovies = this.convertResponseArrayToMovieItems(searchResults);
     return searchedMovies;
   }
 
@@ -77,7 +91,7 @@ export class ApiRepo implements Repo {
 
       return response.data.results;
     } catch (err) {
-      console.log(err);
+      console.error(err);
       return [];
     }
   }
@@ -106,19 +120,25 @@ export class ApiRepo implements Repo {
     }
   }
 
-  private convertResponseToMovieItem(responseArray: any[]): MovieItem[] {
+  private convertResponseArrayToMovieItems(responseArray: any[]): MovieItem[] {
     const results: MovieItem[] = [];
     let i: number;
     for (i = 0; i < responseArray.length; i++) {
       const responseItem = responseArray[i];
-      const movieItem = this.convertResponseItemToMovieItem(responseItem);
+      const generesOfMovie = this.printGenersOfMovie(responseItem.genre_ids);
+      const movieItem = this.convertResponseItemToMovieItem(
+        responseItem,
+        generesOfMovie,
+      );
       results.push(movieItem);
     }
     return results;
   }
 
-  private convertResponseItemToMovieItem(responseItem: any): MovieItem {
-    const generesOfMovie = this.printGenersOfMovie(responseItem.genre_ids);
+  private convertResponseItemToMovieItem(
+    responseItem: any,
+    geners: string,
+  ): MovieItem {
     const posterUrl = this.buildImagePath(responseItem.poster_path);
     const year = this.getYearFromReleaseDate(responseItem.release_date);
 
@@ -126,7 +146,7 @@ export class ApiRepo implements Repo {
       id: responseItem.id,
       title: responseItem.title,
       rating: responseItem.vote_average,
-      catagory: generesOfMovie,
+      catagory: geners,
       poster: posterUrl,
       year: year,
       isFavorite: false,
@@ -134,15 +154,25 @@ export class ApiRepo implements Repo {
   }
 
   private printGenersOfMovie(ids: number[]): string {
-    let genersString: string[] = [];
-    ids.forEach(id => {
-      this.geners.forEach(gener => {
-        if (id === gener.id) {
-          genersString.push(gener.name);
-        }
+    let ans = '';
+    try {
+      let genersString: string[] = [];
+      ids.forEach(id => {
+        this.geners.forEach(gener => {
+          if (id === gener.id) {
+            genersString.push(gener.name);
+          }
+        });
       });
-    });
-    return genersString.join('/');
+      ans = this.joinStringArray(genersString);
+    } catch (err) {
+      console.error(err);
+    }
+    return ans;
+  }
+
+  private joinStringArray(arr: string[]): string {
+    return arr.join('/');
   }
 
   private buildImagePath(pathToImage: string): string {
