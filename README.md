@@ -37,6 +37,7 @@ All of the code is located in the `./src` folder:
 - [React Navigation](https://reactnavigation.org/) - for **tab** navigation.
 - [React Native Elements](https://reactnativeelements.com/) - for better UI components.
 - [React Native Async Storage](https://github.com/react-native-async-storage/async-storage) - for saving key-value pairs in the mobile persistent memory.
+- [axios](https://github.com/axios/axios) - for managing the requests to the API using _XMLHttpRequests_.
 
 # The Advanture of the Architecture
 
