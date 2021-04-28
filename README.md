@@ -72,3 +72,10 @@ I wanted to add a tab to allow users to play a game with their friend, where you
 ## UML Diagram
 
 This is something that should be done before we even start programming, but because I wasn't familiar with React Native I didn't know how to do a good diagram in advance, so I went ahead and got my hands dirty instead. If I had more time I would make a **class diagram** of my architecture.
+
+# What would I improve in the code?
+
+1. Currently I'm storing the movies is a simple array in the Redux store. I would change it to a key-value based data structure, like the `Map` object introduced in _es6_.
+2. Remove all the logic I currently have in the views into a _ViewModel_ that will implement an interface of all the events I have in the view (events like hooks, search text change, etc.). All the models (`moveisHandler`, `favoritesHandler`) will be used in the _ViewModel_ and not in the view component.
+3. Use [Redux Persist](https://github.com/rt2zz/redux-persist) to save the store in the mobile persistant memory.
+4. Save images of favorite movies in the application local storage to allow to view them even if there's no network connection using [react-native-fs](https://github.com/itinance/react-native-fs).
