@@ -6,6 +6,7 @@ import {ApiRepo} from '../../repos';
 import {ListItemRenderer} from '../components';
 import {RootState, useAppSelector} from '../../redux';
 import {MovieItem} from '../../services';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 const PLATFORM =
   Platform.OS === 'ios' || Platform.OS === 'android' ? Platform.OS : 'default';
@@ -77,22 +78,24 @@ export function MoviesList() {
   }
 
   return (
-    <View>
-      <SearchBar
-        platform={PLATFORM}
-        placeholder="Search for a movie title"
-        onChangeText={onChangeTextEvent}
-        onCancel={onRefreshEvent}
-        value={searchText}
-      />
-      <FlatList
-        data={listData}
-        renderItem={ListItemRenderer}
-        refreshing={isRefreshing}
-        onRefresh={onRefreshEvent}
-        onEndReachedThreshold={0.3}
-        onEndReached={onEndReachedEvent}
-      />
-    </View>
+    <SafeAreaView>
+      <View>
+        <SearchBar
+          platform={PLATFORM}
+          placeholder="Search for a movie title"
+          onChangeText={onChangeTextEvent}
+          onCancel={onRefreshEvent}
+          value={searchText}
+        />
+        <FlatList
+          data={listData}
+          renderItem={ListItemRenderer}
+          refreshing={isRefreshing}
+          onRefresh={onRefreshEvent}
+          onEndReachedThreshold={0.3}
+          onEndReached={onEndReachedEvent}
+        />
+      </View>
+    </SafeAreaView>
   );
 }
