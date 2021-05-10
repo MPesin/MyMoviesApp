@@ -5,7 +5,7 @@
 
 # Intro
 
-This is my first React-Native application - a simple app that fetches movies data and shows top rated movies, allows searching and a Favorites tab.  
+This is my first React-Native application using Typescript - a simple app that fetches movies data and shows top rated movies, allows searching and a Favorites tab.  
 The API used for the movies is [The Movie Database API](https://developers.themoviedb.org/3/getting-started/introduction)
 
 # Sources
